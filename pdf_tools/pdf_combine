@@ -1,18 +1,25 @@
 #!/usr/bin/env python3
 
+"""
+Xingyu Yan
+xingyuyan@outlook.com
+27-01-2020
+"""
+
+import datetime
 import click
 from PyPDF4 import PdfFileReader, PdfFileWriter
 
 @click.command()
-@click.argument("file1")
-@click.argument("file2")
-@click.option("--out", "-o", "outfile", prompt = "out put", default = "combined.pdf")
+@click.argument("file1", type = click.Path(exists = True))
+@click.argument("file2", type = click.Path(exists = True))
+@click.option("--out", "-o", "outfile", prompt = "out put", default = "combined")
 def combine(file1, file2, outfile):
     """
     Combine two PDF files each time. The two files will be combined as the given sequance.\n
         file1: first input file\n
         file2: second input file\n
-        outfile: the default output file is "combined.pdf"\n
+        outfile: the name of output file, not include ".pdf". the default output file is "combined-localtime.pdf"\n
     """
     f1 = open(file1, "rb")
     f2 = open(file2, "rb")
@@ -28,7 +35,7 @@ def combine(file1, file2, outfile):
     for x in range(rd2.numPages):
         writer.addPage(rd2.getPage(x))
 
-    f3 = open(outfile, "wb")
+    f3 = open(outfile + "-" + datetime.datetime.now().__str__() + ".pdf", "wb")
     writer.write(f3)
 
     f1.close()

@@ -1,0 +1,39 @@
+#!/usr/bin/env python3
+
+import click
+from PyPDF4 import PdfFileReader, PdfFileWriter
+
+@click.command()
+@click.argument("file1")
+@click.argument("file2")
+@click.option("--out", "-o", "outfile", prompt = "out put", default = "combined.pdf")
+def combine(file1, file2, outfile):
+    """
+    Combine two PDF files each time. The two files will be combined as the given sequance.\n
+        file1: first input file\n
+        file2: second input file\n
+        outfile: the default output file is "combined.pdf"\n
+    """
+    f1 = open(file1, "rb")
+    f2 = open(file2, "rb")
+    
+    rd1 = PdfFileReader(f1)
+    rd2 = PdfFileReader(f2)
+
+    writer = PdfFileWriter()
+    
+    for x in range(rd1.numPages):
+        writer.addPage(rd1.getPage(x))
+
+    for x in range(rd2.numPages):
+        writer.addPage(rd2.getPage(x))
+
+    f3 = open(outfile, "wb")
+    writer.write(f3)
+
+    f1.close()
+    f2.close()
+    f3.close()
+
+if __name__ == "__main__":
+    combine()
